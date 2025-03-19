@@ -1,11 +1,19 @@
 #!/bin/bash
+# first I fetch the most recent events
+# net-binnen.json contains the last 100 events
 curl https://www.vrt.be/vrtnws/_next/data/u6iWbVYnh9kHIkeff4lxk/nl/net-binnen.json | \
     # some objects are not really about events but just ads, these have no uri and can be removed
     jq -c ".pageProps.data.compositions[0].compositions[] | {title: .title.text, timestamp: .metadata[0].timestamp, tag: .tag.text, uri: .action.uri} | select(.uri != null)" \
-    > recent-news-events.json
+    > recent-events.json
 
-# https://jqlang.org/manual/#invoking-jq
-# -s (slurp) reads all files into a single array
-# https://jqlang.org/manual/#group_by
-# if there's a duplicate uri, I just keep the first object
-jq . news-events.json recent-news-events.json | jq -s 'group_by(.uri)[] | .[0]' | jq -c . > news-events.json
+# now I compare recent-news-events.json with main-events
+# I want to know which events are new
+# these events are saved to a file called new-events.json
+# -n (--null-input) is required because the data is loaded using --slurpfile, not from standard input
+# so nothing like cat main-events.json | ...
+jq -c -n --slurpfile main main-events.json --slurpfile recent recent-events.json \
+   '$recent | map(select(.uri as $uri | $main | map(.uri) | index($uri) | not)) | .[]' \
+   > new-events.json
+
+# concatenate main-events.json and new-events.json and save the result to main-events.json
+cat new-events.json >> main-events.json

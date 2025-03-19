@@ -1,0 +1,23 @@
+{
+  "name": "track-vrt-nws",
+  "version": "1.0.0",
+  "main": "get-dynamic-part-net-binnen-url.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/IsaacVerm/track-vrt-nws.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/IsaacVerm/track-vrt-nws/issues"
+  },
+  "homepage": "https://github.com/IsaacVerm/track-vrt-nws#readme",
+  "description": "",
+  "dependencies": {
+    "playwright": "^1.51.1"
+  }
+}

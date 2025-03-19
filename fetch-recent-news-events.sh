@@ -1,7 +1,14 @@
 #!/bin/bash
-# first I fetch the most recent events
+
+# the URL to fetch the events contains a dynamically changing inner part
+# a separate workflow is used to fetch this inner part every couple of hours
+# first get the most recent version of that dynamic part
+DYNAMIC_URL_PART=$(cat dynamic-part-net-binnen-url.txt)
+echo "Successfully retrieved dynamic URL part: $DYNAMIC_URL_PART"
+
+# now I fetch the most recent events
 # net-binnen.json contains the last 100 events
-curl https://www.vrt.be/vrtnws/_next/data/u6iWbVYnh9kHIkeff4lxk/nl/net-binnen.json | \
+curl "https://www.vrt.be/vrtnws/_next/data/${DYNAMIC_URL_PART}/nl/net-binnen.json" | \
     # some objects are not really about events but just ads, these have no uri and can be removed
     jq -c ".pageProps.data.compositions[0].compositions[] | {title: .title.text, timestamp: .metadata[0].timestamp, tag: .tag.text, uri: .action.uri} | select(.uri != null)" \
     > recent-events.json

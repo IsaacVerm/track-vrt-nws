@@ -13,7 +13,7 @@ jobs:
     - name: Check out this repo
       uses: actions/checkout@v4
     - name: Executable script
-      run: chmod +x ./get-dynamic-part-net-binnen-url.sh
+      run: chmod +x ./get-dynamic-part-net-binnen-url.js
     - name: Install dependencies
       run: |
         npm ci
